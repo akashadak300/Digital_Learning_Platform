@@ -1,11 +1,29 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CourseInfo from './CourseInfo';
 import CourseOptions from './CourseOptions';
 import CourseData from './CourseData';
 import CourseContent from './CourseContent';
 import CoursePreview from './CoursePreview';
+import { useCreateCourseMutation } from '../../../../redux/features/courses/coursesApi';
+import toast from 'react-hot-toast';
+import { redirect } from 'next/navigation';
 function CreateCourse() {
+  const [createCourse, { isLoading, isSuccess, error }] = useCreateCourseMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Course Created Successfully")
+      redirect("/admin/all-courses")
+    }
+    if (error) {
+      if ("data" in error) {
+        const errorMessage = error;
+        toast.error(errorMessage.data.message)
+      }
+    }
+
+  }, [isLoading, isSuccess, error])
   const [active, setActive] = useState(0);
   const [courseInfo, setCourseInfo] = useState({
     name: "",
@@ -65,9 +83,11 @@ function CreateCourse() {
   };
 
   const handleCourseCreate = async () => {
-    console.log(courseData)
-    // const response = await axios.post("/api/courses", courseData);
-    // console.log(response)
+    const data = courseData
+    console.log(data);
+    if (!isLoading) {
+      await createCourse(data)
+    }
   }
 
 

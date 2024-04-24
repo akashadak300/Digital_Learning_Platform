@@ -153,10 +153,7 @@ export const updateAccessToken = CatchAsyncError(async (req, res, next) => {
 
   await redis.set(user._id, JSON.stringify(user), "EX", 259200);
 
-  res.status(200).json({
-    status: "success",
-    accessToken
-  })
+  next();
 
 })
 

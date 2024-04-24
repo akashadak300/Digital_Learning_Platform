@@ -15,6 +15,7 @@ import axios from "axios";
 
 // upload course
 export const uploadCourse = CatchAsyncError(async (req, res, next) => {
+  console.log("Hello")
   const data = req.body;
   const thumbnail = data.thumbNail
   if (thumbnail) {
