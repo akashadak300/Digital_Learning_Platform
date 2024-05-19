@@ -94,25 +94,12 @@ export const getSingleCourse = CatchAsyncError(async (req, res, next) => {
 export const getAllCourse = CatchAsyncError(async (req, res, next) => {
 
   // is All course cached in redis
-  const isAllcoursesCached = await redis.get("all courses");
 
-  if (!isAllcoursesCached) {
-    const courses = await courseModel.find().select("-courseData.videoUrl -courseData.questions -courseData.suggestions -courseData.links");
-
-
-    redis.set("all courses", JSON.stringify(courses));
-    res.status(200).json({
-      success: true,
-      courses
-    })
-  }
-  else {
-    const courses = JSON.parse(isAllcoursesCached);
-    res.status(200).json({
-      success: true,
-      courses
-    })
-  }
+  const courses = await courseModel.find().select("-courseData.videoUrl -courseData.questions -courseData.suggestions -courseData.links");
+  res.status(200).json({
+    success: true,
+    courses
+  })
 })
 
 
